@@ -14,11 +14,14 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import Database from 'better-sqlite3';
 
 const SCRYPT = { N: 16384, r: 8, p: 1, keylen: 64 };
 const FILE = process.env.SAKU_DB_PATH || path.join(process.cwd(), 'data', 'saku.db');
-const SCHEMA_FILE = path.join(process.cwd(), 'lib', 'schema.sql');
+// Dicari relatif terhadap letak skrip ini, bukan direktori kerja saat ini —
+// supaya perintah bisa dijalankan dari mana saja tanpa gagal.
+const SCHEMA_FILE = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'lib', 'schema.sql');
 
 function hashPassword(password) {
   const salt = crypto.randomBytes(16);
