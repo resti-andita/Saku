@@ -1,5 +1,25 @@
-import {createServerClient,type CookieOptions} from '@supabase/ssr';
-import {NextResponse,type NextRequest} from 'next/server';
-export async function proxy(request:NextRequest){let response=NextResponse.next({request});response.headers.set('Cache-Control','private, no-store');if(!process.env.NEXT_PUBLIC_SUPABASE_URL||!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)return response;
-const client=createServerClient(process.env.NEXT_PUBLIC_SUPABASE_URL,process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,{cookieOptions:{httpOnly:true,sameSite:'lax',secure:process.env.NODE_ENV==='production',path:'/'},cookies:{getAll:()=>request.cookies.getAll(),setAll(items: {name:string;value:string;options:CookieOptions}[]){items.forEach(({name,value})=>request.cookies.set(name,value));response=NextResponse.next({request});items.forEach(({name,value,options})=>response.cookies.set(name,value,options));response.headers.set('Cache-Control','private, no-store');}}});await client.auth.getUser();return response;}
-export const config={matcher:['/','/login','/api/:path*']};
+import { NextResponse, type NextRequest } from 'next/server';
+
+/**
+ * Middleware (Next 16: proxy.ts) — TIDAK menyentuh database.
+ *
+ * Middleware berjalan di runtime Edge, tempat better-sqlite3 tidak tersedia.
+ * Karena itu di sini hanya ada pemeriksaan cepat: apakah cookie sesi ada.
+ * Itu BUKAN autentikasi — verifikasi sesi yang sebenarnya dilakukan di server
+ * (app/chatgpt-auth.ts) pada setiap halaman dan setiap route /api.
+ */
+export function proxy(request: NextRequest) {
+  const response = NextResponse.next({ request });
+  response.headers.set('Cache-Control', 'private, no-store');
+
+  const { pathname } = request.nextUrl;
+  const isPublic = pathname === '/login' || pathname.startsWith('/api/auth/');
+  if (isPublic || request.cookies.has('saku_session')) return response;
+
+  if (pathname.startsWith('/api/')) {
+    return NextResponse.json({ error: 'Silakan masuk kembali.' }, { status: 401, headers: { 'Cache-Control': 'no-store' } });
+  }
+  return NextResponse.redirect(new URL('/login', request.url));
+}
+
+export const config = { matcher: ['/', '/login', '/api/:path*'] };

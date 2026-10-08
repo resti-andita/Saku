@@ -1,3 +1,6 @@
+> **Catatan:** dokumen ini menjelaskan alur **Supabase + Vercel**. Cabang `sqlite`
+> sudah dipindahkan ke SQLite + berkas lokal — lihat `SQLITE.md` untuk yang berlaku.
+
 # Saku — instalasi GitHub + Vercel + Supabase
 
 Paket ini adalah salinan migrasi Tour Ledger. Tampilan, perhitungan cash advance,
