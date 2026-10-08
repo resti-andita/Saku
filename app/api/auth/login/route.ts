@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { SESSION_COOKIE, configured, signIn } from '@/lib/auth';
+import { SESSION_COOKIE, configured, sessionCookieOptions, signIn } from '@/lib/auth';
 import { sameOrigin } from '@/lib/request-security';
 
 export async function POST(req: Request) {
@@ -15,13 +15,7 @@ export async function POST(req: Request) {
       return Response.json({ error: 'Email atau kata sandi tidak sesuai, atau akun belum diberi akses.' }, { status: 401 });
     }
     const jar = await cookies();
-    jar.set(SESSION_COOKIE, session.token, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-      path: '/',
-      expires: session.expires,
-    });
+    jar.set(SESSION_COOKIE, session.token, sessionCookieOptions(session.expires));
     return Response.json({ ok: true }, { headers: { 'Cache-Control': 'no-store' } });
   } catch {
     return Response.json({ error: 'Tidak dapat masuk. Coba lagi.' }, { status: 400 });

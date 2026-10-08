@@ -39,6 +39,21 @@ npm start
 Tidak ada variabel yang perlu ada saat build — mengubah daftar email atau lokasi
 database **tidak** memerlukan build ulang (beda dengan `NEXT_PUBLIC_*` Supabase).
 
+## Variabel lingkungan
+
+| Variabel | Isi |
+|---|---|
+| `SAKU_ALLOWED_EMAILS` | daftar email yang boleh masuk, dipisah koma |
+| `SAKU_DB_PATH` | lokasi berkas database SQLite |
+| `SAKU_FILES_DIR` | direktori penyimpanan struk |
+| `SAKU_INSECURE_COOKIES` | `1` = matikan atribut `Secure` pada cookie sesi |
+
+`SAKU_INSECURE_COOKIES=1` hanya untuk saat aplikasi masih diakses lewat **HTTP
+polos** (mis. IP tanpa domain). Tanpa itu, browser menolak menyimpan cookie sesi
+di HTTP sehingga login tidak pernah bertahan dan aplikasi tampak rusak. Hapus
+flag ini begitu HTTPS aktif — selama menyala, kata sandi dan cookie lewat
+jaringan tanpa enkripsi.
+
 ## Mengelola akun
 
 ```bash

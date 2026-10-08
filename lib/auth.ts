@@ -109,3 +109,23 @@ export async function currentEmail() {
   const email = sessionEmail(await cookieToken());
   return email && allowed(email) ? email : null;
 }
+
+/**
+ * Atribut cookie sesi.
+ *
+ * `Secure` WAJIB aktif begitu aplikasi diakses lewat HTTPS. Tetapi browser
+ * menolak menyimpan cookie bertanda `Secure` bila halaman disajikan lewat HTTP
+ * polos, sehingga sesi tidak pernah tersimpan dan login tampak gagal.
+ * SAKU_INSECURE_COOKIES=1 mematikan atribut itu — pakai HANYA selama aplikasi
+ * masih diakses lewat IP tanpa TLS, dan hapus begitu domain + HTTPS siap.
+ */
+export function sessionCookieOptions(expires: Date) {
+  const insecure = process.env.SAKU_INSECURE_COOKIES === '1';
+  return {
+    httpOnly: true,
+    sameSite: 'lax' as const,
+    secure: !insecure && process.env.NODE_ENV === 'production',
+    path: '/',
+    expires,
+  };
+}
