@@ -126,3 +126,19 @@ h2,h3{font-weight:600}
 .metric-card strong,.daily-advance>strong,.reimburse-totals b,.appearance-preview strong{font-weight:500}
 .wallet-details b,.balance-total dd,.balance-total dt{font-weight:500}
 @media(max-width:760px){.header .brand{font-size:26px}.page-heading h1{font-size:40px}}
+
+/* Kartu masuk halaman login.
+   Halaman /login TIDAK berada di dalam .app-dialog, sedangkan seluruh gaya
+   label/input di berkas ini dilingkupi kelas tersebut — sehingga form login
+   sebelumnya tampil tanpa gaya sama sekali. Aturan di bawah menyalin gaya itu,
+   tanpa membawa max-width/overflow milik dialog. */
+.login-card h1{font-family:'Monigue',Inter,sans-serif;font-weight:400;line-height:1.15;letter-spacing:.01em}
+.login-card form{display:flex;flex-direction:column;gap:18px}
+.login-card label{display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:500;color:#656572}
+.login-card input:not([type=file]){width:100%;border:1px solid transparent;border-radius:12px;background:#f3f3f8;min-height:48px;padding:12px 14px;font-size:16px;line-height:1.5;color:#25252b;transition:background .2s,border-color .2s}
+.login-card input:not([type=file]):focus{outline:none;background:#fff;border-color:#163300;box-shadow:0 0 0 3px #1633001a}
+.login-card input::placeholder{color:#9a9aa5}
+.login-card .login-submit{display:flex;align-items:center;justify-content:center;width:100%;min-height:50px;border-radius:14px;border:0;background:#163300;color:#FFFFFF;font-size:16px;font-weight:600;box-shadow:0 8px 20px -9px #16330066;transition:background .2s,opacity .2s}
+.login-card .login-submit:hover:not(:disabled){background:#1e4a00}
+.login-card .login-submit:disabled{opacity:.65;cursor:progress}
+@media(max-width:760px){.login-card{padding:24px!important}}
