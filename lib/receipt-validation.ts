@@ -1,0 +1,3 @@
+export const MAX_RECEIPT_SIZE=10*1024*1024;
+export const RECEIPT_TYPES=['image/jpeg','image/png','image/webp','application/pdf'];
+export function validReceipt(bytes:Uint8Array,type:string){if(!bytes.length||bytes.length>MAX_RECEIPT_SIZE)return false;const str=(start:number,end:number)=>new TextDecoder().decode(bytes.slice(start,end));if(type==='image/jpeg')return bytes[0]===255&&bytes[1]===216&&bytes[2]===255;if(type==='image/png')return [137,80,78,71,13,10,26,10].every((v,i)=>bytes[i]===v);if(type==='application/pdf')return str(0,5)==='%PDF-';if(type==='image/webp')return str(0,4)==='RIFF'&&str(8,12)==='WEBP';return false;}
